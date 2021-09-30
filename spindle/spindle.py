@@ -1,4 +1,14 @@
-class Spindle(object):
-    def __init__(self):
-        pass
+import uuid 
+
+class Spindle():
+    def __init__(self, model=None):
+
+        self.values = {}
+        self.values['id'] = uuid.uuid4()
+        
+        
+
+        
+
+
 
