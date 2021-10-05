@@ -27,3 +27,20 @@ print(d)
 a = None 
 b = a or "x"
 print(b)
+
+d = {'a':'1', 'b':'2'}
+print(d)
+if isinstance(d, dict):
+    print("is dict")
+for k,v in d.items(): 
+    print(k, v)
+
+
+class T:
+    def __init__(self):
+        self.a = "x"
+
+tt = T()
+print('------------')
+print(vars(t).items())
+print(vars(tt).items())

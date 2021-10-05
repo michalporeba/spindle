@@ -1,4 +1,4 @@
 from spindle import Spindle 
 
-def create() -> Spindle:
-    return Spindle()
+def create(model=None):
+    return Spindle(model)
