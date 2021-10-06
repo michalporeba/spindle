@@ -15,11 +15,21 @@ def test_values_from_single_model():
 def test_message_setting_property():
     sut = spd.create()
     sut.add_message('src', Message('property_a', 'value_a'))
+    assert not 'property_a' in sut.conflicts
     assert sut.values['property_a'] == 'value_a'
 
 def test_message_setting_properties():
     sut = spd.create()
     sut.add_message('src', Message('prop_a', '123'))
     sut.add_message('src', Message('prop_b', '456'))
+    assert not 'prop_a' in sut.conflicts
+    assert not 'prop_b' in sut.conflicts
     assert sut.values['prop_a'] == '123'
     assert sut.values['prop_b'] == '456'
+
+def test_concurrent_orfan_value_changes_result_in_conflict():
+    sut = spd.create()
+    sut.add_message('src_a', Message('my_prop', 12))
+    sut.add_message('src_b', Message('my_prop', 42))
+    assert 'my_prop' in sut.conflicts
+    

@@ -4,6 +4,8 @@ class Spindle():
     def __init__(self, model=None):
         self._messages = {}
         self.values = {}
+        self.conflicts = {}
+
         if model: 
             for k, v in self._model_to_dict(model).items():
                 self.values[k] = v
@@ -12,7 +14,12 @@ class Spindle():
         if not source in self._messages:
             self._messages[source] = []
         self._messages[source].append(message)
-        self.values[message.property] = message.value
+        if message.property in self.values:
+            self.conflicts[message.property] = {}
+            self.values[message.property] = None
+        else:
+            self.values[message.property] = message.value
+        
 
     def _model_to_dict(self, model) -> dict:
         if isinstance(model, dict):
