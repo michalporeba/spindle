@@ -16,3 +16,10 @@ def test_message_setting_property():
     sut = spd.create()
     sut.add_message('src', Message('property_a', 'value_a'))
     assert sut.values['property_a'] == 'value_a'
+
+def test_message_setting_properties():
+    sut = spd.create()
+    sut.add_message('src', Message('prop_a', '123'))
+    sut.add_message('src', Message('prop_b', '456'))
+    assert sut.values['prop_a'] == '123'
+    assert sut.values['prop_b'] == '456'
