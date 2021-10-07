@@ -59,3 +59,11 @@ def test_conflicts_dont_get_mixed_up():
     assert not c in prop1.candidates
     assert not d in prop1.candidates
     assert not x in prop1.candidates 
+
+def test_multiple_repetitions_of_a_message_doesnt_affect_scalar_value():
+    sut = spd.create()
+    m = Message('src', 'my_prop', 42)
+    sut.add_message(m)
+    sut.add_message(m)
+    assert not 'my_prop' in sut.conflicts()
+    assert sut.values()['my_prop'] == 42
