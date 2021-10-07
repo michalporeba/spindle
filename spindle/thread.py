@@ -1,11 +1,12 @@
 from .conflict import Conflict 
+from .message import Message
 
 class Thread():
     def __init__(self):
         self.messages = []
         self._current = None
         
-    def add(self, message):
+    def add(self, message: Message):
         self.messages.append(message)
         if len(self.messages) == 1:
             self._current = message.value    
