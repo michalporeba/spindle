@@ -11,13 +11,14 @@ class Spindle():
             for k, v in self._model_to_dict(model).items():
                 self.add_message(Message(source, k, v))
                 
-    def add_message(self, message):
-        if not message.property in self._threads:
-            self._threads[message.property] = Thread()
-        self._threads[message.property].add(message)
+    def add_message(self, *messages):
+        for message in messages:
+            if not message.property in self._threads:
+                self._threads[message.property] = Thread()
+            self._threads[message.property].add(message)
         
     def values(self) -> dict:
-        return {k: v.flat_value() for k, v in self._threads.items()}
+        return {k: v.value() for k, v in self._threads.items()}
 
     def conflicts(self) -> list:
         return {k: v for k, v in self._threads.items() if isinstance(v.value(), Conflict)}.keys()

@@ -6,11 +6,12 @@ class Thread():
         self._current = None
         
     def add(self, message):
-        self._current = message.value
         self.messages.append(message)
-        if len(self.messages) > 1:
-            self._current = Conflict(self.messages)
-
+        if len(self.messages) == 1:
+            self._current = message.value    
+        else:
+            self._current = Conflict(self.messages)        
+        
     def value(self):
         return self._current
 
