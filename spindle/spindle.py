@@ -29,5 +29,4 @@ class Spindle():
         if isinstance(model, dict):
             return {k: v for k, v in model.items() if not k.startswith('_')}
         else: 
-            print(vars(model).items())
             return {k: v for k, v in vars(model).items() if not k.startswith('_')}

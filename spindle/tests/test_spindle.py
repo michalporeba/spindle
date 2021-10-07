@@ -67,3 +67,22 @@ def test_multiple_repetitions_of_a_message_doesnt_affect_scalar_value():
     sut.add_message(m)
     assert not 'my_prop' in sut.conflicts()
     assert sut.values()['my_prop'] == 42
+
+def test_single_line_of_a_scalar_value_message():
+    sut = spd.create()
+    a = Message('src', 'my_prop', 1)
+    b = Message('src', 'my_prop', 3, a.signature)
+    c = Message('src', 'my_prop', 2, b.signature)
+    sut.add_message(a, b, c)
+    assert not 'my_prop' in sut.conflicts()
+    assert sut.values()['my_prop'] == 2
+
+def test_single_line_of_a_scalar_value_message_in_reverse_order():
+    sut = spd.create()
+    a = Message('src', 'my_prop', 1)
+    b = Message('src', 'my_prop', 3, a.signature)
+    c = Message('src', 'my_prop', 2, b.signature)
+    sut.add_message(c, b, a)
+    assert not 'my_prop' in sut.conflicts()
+    assert sut.values()['my_prop'] == 2
+
