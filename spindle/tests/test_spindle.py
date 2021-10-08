@@ -86,3 +86,37 @@ def test_single_line_of_a_scalar_value_message_in_reverse_order():
     assert not 'my_prop' in sut.conflicts()
     assert sut.values()['my_prop'] == 2
 
+def test_simple_conflict_resolution():
+    sut = spd.create()
+    a = Message('src1', 'my_prop', 'abc')
+    b = Message('src2', 'my_prop', 'def') 
+    sut.add_message(a,b)
+    assert 'my_prop' in sut.conflicts()
+    r = Message('src1', 'my_prop', 'abcdef', a.signature, b.signature)
+    sut.add_message(r)
+    assert not 'my_prop' in sut.conflicts()
+    assert sut.values()['my_prop'] == 'abcdef'
+
+def test_complex_conflict_resolution():
+    sut = spd.create()
+    a = Message('src1', 'p', 'abc')
+    b = Message('src2', 'p', 'def') 
+    b1 = Message('src2', 'p', 'de', b.signature)
+    b2 = Message('src3', 'p', 'defg', b.signature)
+    sut.add_message(a,b, b1, b2)
+    assert 'p' in sut.conflicts()
+    assert len([m for m in sut.values()['p'].candidates if m.value == 'abc'])
+    assert len([m for m in sut.values()['p'].candidates if m.value == 'de'])
+    assert len([m for m in sut.values()['p'].candidates if m.value == 'defg'])
+    assert not len([m for m in sut.values()['p'].candidates if m.value == 'def'])
+    # resolve the b branch
+    r1 = Message('src2', 'p', 'x', b1.signature, b2.signature)
+    sut.add_message(r1)
+    assert 'p' in sut.conflicts()
+    assert len([m for m in sut.values()['p'].candidates if m.value == 'abc'])
+    assert len([m for m in sut.values()['p'].candidates if m.value == 'x'])
+    # resolve it all
+    r2 = Message('src2', 'p', 'abcx', a.signature, r1.signature)
+    sut.add_message(r2)
+    assert not 'p' in sut.conflicts()
+    assert sut.values()['p'] == 'abcx'
