@@ -120,3 +120,13 @@ def test_complex_conflict_resolution():
     sut.add_message(r2)
     assert not 'p' in sut.conflicts()
     assert sut.values()['p'] == 'abcx'
+
+def test_automatically_resolve_same_value_from_different_sources():
+    sut = spd.create()
+    a = Message('src1', 'p', 'abc')
+    b1 = Message('src2', 'p', 'x', a.signature)
+    b2 = Message('src3', 'p', 'x', a.signature)
+    sut.add_message(a, b1, b2)
+    assert not 'p' in sut.conflicts()
+    assert sut.values()['p'] == 'x'
+    assert not 'src1' in sut.values()['p'].sources()

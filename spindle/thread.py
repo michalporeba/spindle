@@ -7,6 +7,7 @@ class Thread():
         self.__current = None
         self.__parents = []
         self.__candidates = []
+        self.__surces = []
         
     def add(self, message: Message):
         if len([m for m in self.messages if m.signature == message.signature]):
